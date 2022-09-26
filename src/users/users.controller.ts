@@ -1,30 +1,25 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create.user.dto';
 import { User } from '../utils/sequelize';
+import { UserDto } from './dtos/user.dto';
 
 @Controller('users')
 export class UsersController {
 
   constructor(private usersService: UsersService) {}
 
-  @Post()
-  createUser(@Body() userDto: CreateUserDto): Promise<User> {
-    return this. usersService.createUser(userDto)
-  }
-
   @Get()
-  getAllUsers(): Promise<User[]> {
-    return this.usersService.getAllUsers()
-  }
+  getAllUsers(): Promise<UserDto[]> {
+    return this.usersService.getAllUsers();
+  };
 
-  @Get('/:email')
-  getUserByEmail(@Param() email: string): Promise<User | null> {
-    return this.usersService.getUserByEmail(email)
-  }
+  @Put('/:email')
+  updateUserData(@Param('email') email: string, password: string): Promise<User> {
+    return this.usersService.updateUserData(email, password);
+  };
 
-
-
-
-
+  @Delete('/:email')
+  deleteUser(@Param('email') email: string): Promise<string> {
+    return this.usersService.deleteUser(email);
+  };
 }

@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BeforeCreate, Column, DataType, Model, Table } from 'sequelize-typescript';
+import * as bcrypt from 'bcrypt';
 
 interface UserCreationAttrs {
   email: string;
@@ -15,4 +16,9 @@ export class User extends Model<User, UserCreationAttrs>{
 
   @Column({type: DataType.STRING, allowNull: false})
   password: string;
+
+  @BeforeCreate
+  static async hashPassword(instance: User) {
+    instance.password = await bcrypt.hash(instance.password, 5)
+  }
 }
